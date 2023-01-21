@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layouts/header::head">
+  <title>Mostrado de producto</title>
+</head>
+<body>
+<header th:replace="layouts/header::header"></header>
+<div class="row">
+  <div class="col-xs-8 col-md-8">
+    <h3>
+      <a href="@{/products}" class="btn btn-primary"><span class="glyphicon glyphicon-list"></span> Product</a>
+    </h3>
+    <h2 th:text="${product.getProductName()}"></h2>
+    <h2><img th:src="${product.getProductPicture()}" width="200" /></h2>
+    <dl class="list">
+      <dt>Product Price</dt>
+      <dd th:text="${product.getProductPrice()}"></dd>
+    </dl>
+    <form th:action="@{/deleteProduct}">
+      <input type="hidden" name="id" th:value="${product.getProductId()}" />
+      <h2><input type="submit" class="btn btn-danger" value="Delete" onclick="return confirm('Are you sure?');" />
+        <a th:href="@{'editProduct/' + ${product.getProductId}}" class="btn btn-warning">Editar</a></h2>
+    </form>
+  </div>
+</div>
+</body>
+</html>

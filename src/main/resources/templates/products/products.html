@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layouts/header::head">
+  <title>Lista de productos</title>
+</head>
+<body>
+<header th:replace="layouts/header::header"></header>
+<div class="row">
+  <div class="col-xs-8 col-md-8">
+    <h3>
+      <a th:href="@{/createProduct}" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Crea un producto</a>
+    </h3>
+    <h2>Product List</h2>
+    <div class="table-responsive">
+      <table class="table" id="product-table">
+        <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Precio</th>
+          <th>Imagen</th>
+          <th>Stock</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${products}">
+          <td><a th:text="${product.getProductName()}" th:href="@{'products/showProduct/' + ${product.getProductId()}}"></a></td>
+          <td th:text="${product.getProductPrice()}"></td>
+          <td th:text="${product.getProductPicture()}"></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>
