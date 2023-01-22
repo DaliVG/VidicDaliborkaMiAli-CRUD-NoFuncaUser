@@ -34,12 +34,11 @@ public class UsersGroup {
         this.group = group;
     }
 
-    public User getUserName() {
+    public User getGroupUserName() {
         return userName;
     }
 
-    public void setUserName(User userName) {
+    public void setGroupUserName(User userName) {
         this.userName = userName;
     }
-
 }

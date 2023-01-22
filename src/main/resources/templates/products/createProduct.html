@@ -7,11 +7,8 @@
 </head>
 <body>
 <header th:replace="layouts/header::header"></header>
-<div class="row">
+<div class="row mx-4">
   <div class="m-4 col-xs-8 col-md-8">
-    <h3>
-      <a href="@{/createProduct}" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-list"></span>Crea un producto</a>
-    </h3>
     <h2>Crear Producto</h2>
     <form th:action="@{/saveProduct}" method="post">
       <div class="form-group">
