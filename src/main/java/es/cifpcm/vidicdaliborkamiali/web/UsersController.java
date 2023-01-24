@@ -78,14 +78,14 @@ public class UsersController {
     }
 
     @RequestMapping("users/showUser/editUser/{id}")
-    public String edit(@PathVariable Integer id, Model model) {
-        model.addAttribute("user", usersRepository.findById(id).orElse(null));
+    public String edit(@PathVariable Short id, Model model) {
+        model.addAttribute("user", usersRepository.findById(Integer.valueOf(id)).orElse(null));
         return "users/editUser";
     }
 
     @RequestMapping("/updateUser")
-    public String update(@RequestParam Integer id, @RequestParam String userName, @RequestParam String password) {
-        User user = usersRepository.findById(id).orElse(null);
+    public String update(@RequestParam Short id, @RequestParam String userName, @RequestParam String password) {
+        User user = usersRepository.findById(Integer.valueOf(id)).orElse(null);
         var name = user.getUserName();
         UsersGroup usu = null;
 
@@ -99,12 +99,14 @@ public class UsersController {
         }
 
         if(usu!=null) {
+
            usu.getGroupUserName().setUserName(userName);
            usersGroupRepository.save(usu);
+        }else {
+            user.setUserName(userName);
         }
-        user.setUserName(userName);
-        user.setPassword(password);
 
+        user.setPassword(password);
         usersRepository.save(user);
         return "redirect: users/showUser/" + user.getId();
     }

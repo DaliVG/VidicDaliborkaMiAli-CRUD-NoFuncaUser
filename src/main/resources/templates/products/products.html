@@ -7,6 +7,9 @@
 </head>
 <body>
 <header th:replace="layouts/header::header"></header>
+<select class="form-control" id="dropDownList" >
+  <option th:each="provincia : ${provincias}" th:value="${provincia.getNombre()}" th:text="${provincia.getNombre()}"></option>
+</select>
 <div class="row mx-4">
   <div class="col-xs-8 col-md-8">
     <h3>

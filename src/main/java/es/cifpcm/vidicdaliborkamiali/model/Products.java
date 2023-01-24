@@ -16,7 +16,7 @@ public class Products {
     @Column(name = "product_picture", nullable = true)
     private String productPicture;
     @Column(name = "id_municipio", nullable = false)
-    private Integer idMunicipio;
+    private static Integer idMunicipio;
     @Column(name = "product_stock", nullable = false)
     private Integer productStock;
 
@@ -52,7 +52,7 @@ public class Products {
         this.productPicture = productPicture;
     }
 
-    public Integer getIdMunicipio() {
+    public static Integer getIdMunicipio() {
         return idMunicipio;
     }
 

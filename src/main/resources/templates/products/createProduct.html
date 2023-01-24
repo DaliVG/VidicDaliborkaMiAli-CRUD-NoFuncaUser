@@ -12,20 +12,20 @@
     <h2>Crear Producto</h2>
     <form th:action="@{/saveProduct}" method="post">
       <div class="form-group">
-        <label>Product Name:</label>
+        <label>Nombre del producto:</label>
         <input type="text" class="form-control" name="prodName" />
       </div>
       <div class="form-group">
-        <label>Product Price</label>
+        <label>Precio</label>
         <input type="number" class="form-control" name="prodPrice" />
       </div>
       <div class="form-group">
-        <label>Product Stock</label>
+        <label>Stock</label>
         <input type="number" class="form-control" name="prodStock" />
       </div>
       <div class="form-group">
-        <label>Product Image URL:</label>
-        <input type="url" class="form-control" name="prodImage" />
+        <label>Sube el link:</label>
+        <input type="text" class="form-control" name="prodImage" />
       </div>
       <button type="submit" class="btn btn-success">Guardar</button>
     </form>
