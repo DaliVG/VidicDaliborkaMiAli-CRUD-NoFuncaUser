@@ -21,6 +21,7 @@ public class ProductsController {
     ProductsRepository productsRepository;
     @Autowired
     ProvinciaRepository provinciaRepository;
+
     @RequestMapping("/products")
     public String product(Model model) {
 
@@ -36,7 +37,7 @@ public class ProductsController {
 //                FilteredProducts.add(munProduct);
 //            }
 //        }
-        provinciaRepository.findAll();
+
         model.addAttribute("provincias", provinciaRepository.findAll());
         model.addAttribute("products", productsRepository.findAll());
         return "products/products";
@@ -44,6 +45,7 @@ public class ProductsController {
 
     @RequestMapping("/createProduct")
     public String create(Model model) {
+        model.addAttribute("provincias", provinciaRepository.findAll());
         return "products/createProduct";
     }
 

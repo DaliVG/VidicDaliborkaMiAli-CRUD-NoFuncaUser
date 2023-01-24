@@ -7,6 +7,13 @@
 </head>
 <body>
 <header th:replace="layouts/header::header"></header>
+<form name="filtro">
+  <select class="form-control pro" id="provin" name="provinId">
+    <option th:each="provincia : ${provincias}" th:value="${provincia.getId()}" th:text="${provincia.getNombre()}"></option>
+  </select>
+  <select class="form-control" id="munis" name="Municipio" >
+  </select>
+</form>
 <div class="row mx-4">
   <div class="m-4 col-xs-8 col-md-8">
     <h2>Crear Producto</h2>
@@ -32,5 +39,40 @@
   </div>
 </div>
 </body>
+<script>
+
+
+  const DOM = {
+    selecCateg: document.getElementById('munis'),
+    prov: document.getElementById("provin")
+  }
+
+      DOM.prov.addEventListener("change", changeMunicipio);
+
+    function CleanPage(){
+      let first = document.querySelectorAll('.muniDes');
+      first.forEach(element => element.remove());
+    }
+
+    async function changeMunicipio(){
+      let municipios = [];
+      let id = DOM.prov.value;
+      let url = "http://localhost:8080/VidicDaliborkaMiAli/products/municipiosFiltrados/"+id;
+          await fetch(url)
+          .then(response => response.json())
+          .then(json => municipios = json)
+          CleanPage()
+          municipios.forEach(element => {
+          optionR = document.createElement("option");
+          optionR.setAttribute("class", "muniDes");
+          optionR.value = element.id;
+          optionR.textContent= element.nombre;
+          DOM.selecCateg.appendChild(optionR);
+          });
+      }
+
+
+
+</script>
 </html>
 
