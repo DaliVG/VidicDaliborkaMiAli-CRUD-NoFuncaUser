@@ -15,19 +15,27 @@
     <form th:action="@{/updateProduct}" method="post">
       <div class="form-group">
         <label>Nombre de producto:</label>
-        <input type="text" class="form-control" name="prodName" th:value="${prodName}" />
+        <input type="text" class="form-control" name="prodName" th:value="${prodName}" th:text="${product.getProductName()}" required/>
       </div>
       <div class="form-group">
         <label>Precio</label>
-        <input type="number" class="form-control"  name="prodPrice" th:value="${prodPrice}" />
+        <input type="number" class="form-control"  name="prodPrice" th:value="${prodPrice}" min="0" th:text="${product.getProductPrice()}" required/>
       </div>
       <div class="form-group">
-        <label>Sube el link de la foto:</label>
-        <input type="text" class="form-control" name="prodImage" th:value="${prodImage}" />
+        <label>Sube el link de la foto: (Dejar en blanco para gestión del Admin)</label>
+        <input type="text" class="form-control" name="prodImage" th:value="${prodImage}" th:text="${product.getProductPicture()}"/>
       </div>
       <div class="form-group">
         <label>Stock del producto</label>
-        <input type="number" class="form-control" name="prodStock" th:value="${prodStock}" />
+        <input type="number" class="form-control" name="prodStock" th:value="${prodStock}" min="0" th:text="${product.getProductStock()}"required/>
+      </div>
+      <div class="form-group">
+        <label>Municipio</label>
+        <select class="form-control pro" id="provin" name="provinId" >
+          <option th:each="provincia : ${provincias}" th:value="${provincia.getId()}" th:text="${provincia.getNombre()}"></option>
+        </select>
+        <select class="form-control" id="munis" name="prodMun" required>
+        </select>
       </div>
       <input type="hidden" name="id" th:value="${product.getId()}" />
       <button type="submit" class="btn btn-success">Guardar</button>
@@ -35,5 +43,34 @@
   </div>
 </div>
 </body>
+<script>
+  const DOM = {
+    selecCateg: document.getElementById('munis'),
+    prov: document.getElementById("provin")
+  }
+      DOM.prov.addEventListener("change", changeMunicipio);
+
+    function CleanPage(){
+      let first = document.querySelectorAll('.muniDes');
+      first.forEach(element => element.remove());
+    }
+
+    async function changeMunicipio(){
+      let municipios = [];
+      let id = DOM.prov.value;
+      let url = "http://localhost:8080/VidicDaliborkaMiAli/products/municipiosFiltrados/"+id;
+          await fetch(url)
+          .then(response => response.json())
+          .then(json => municipios = json)
+          CleanPage()
+          municipios.forEach(element => {
+          optionR = document.createElement("option");
+          optionR.setAttribute("class", "muniDes");
+          optionR.value = element.id;
+          optionR.textContent= element.nombre;
+          DOM.selecCateg.appendChild(optionR);
+         });
+      }
+</script>
 </html>
 

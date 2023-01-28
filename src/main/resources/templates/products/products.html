@@ -39,7 +39,7 @@
           <td><a th:text="${product.getProductName()}" th:href="@{'products/showProduct/' + ${product.getId()}}"></a></td>
           <td th:text="${product.getProductPrice()}"></td>
           <td><img th:src="'images/'+${product.getProductPicture()}" width="120" height="120"/></td>
-          <td th:text="${product.getProductStock()}" id="num"></td>
+          <td th:text="${product.getProductStock()}"></td>
           <td>
               <a th:href="@{'products/shoppingcart/' + ${product.getId()}}" class="btn btn-warning" id="carro">Agregar al carrito</a>
           </td>
@@ -55,14 +55,10 @@
   const DOM = {
     selecCateg: document.getElementById('munis'),
     prov: document.getElementById("provin"),
-    agregar: document.getElementById("carro"),
-    numero: document.getElementById("num"),
-    tedes: document.querySelectorAll("td"),
+    add: document.getElementById("carro")
   }
 
-  if (DOM.numero.textContent=="0"){
-    DOM.agregar.classList.add('d-none');
-  }
+     DOM.prov.addEventListener("change", changeMunicipio);
 
     function CleanPage(){
       let first = document.querySelectorAll('.muniDes');

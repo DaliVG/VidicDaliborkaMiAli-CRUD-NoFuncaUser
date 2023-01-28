@@ -1,6 +1,7 @@
 package es.cifpcm.vidicdaliborkamiali.web;
 
 import es.cifpcm.vidicdaliborkamiali.dao.ProductsRepository;
+import es.cifpcm.vidicdaliborkamiali.model.ProductOrder;
 import es.cifpcm.vidicdaliborkamiali.model.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -18,68 +20,112 @@ public class CartController {
     @Autowired
     ProductsRepository productsRepository;
 
-    List<Products> shoppingList = new ArrayList<>();
+    List<ProductOrder> shoppingList = new ArrayList<>();
     @RequestMapping("/notStock")
-    public String stock() {
+    public String nostock() {
         return "products/notStock";
     }
 
-    @RequestMapping("products/shoppingcart")
+    @RequestMapping("/products/shoppingcart")
     public String shoppingcart(Model model) {
         model.addAttribute("products", shoppingList);
         return "products/shoppingcart";
     }
 
     @RequestMapping("/deleteItem")
-    public String shoppingcart(@RequestParam Integer id) {
+    public String deleteitem(@RequestParam Integer id) {
 
-        Products itemOut = productsRepository.findById(id).orElse(null);
+        Object pro = shoppingList.stream().filter(item -> (item.getId()).equals(id)).findFirst().orElse(null);
+        shoppingList.remove(pro);
 
-        for (int i = 0; i < shoppingList.size(); i++) {
+        return "redirect: products";
+    }
 
-            if((shoppingList.get(i).getId()).equals(itemOut.getId())){
-                shoppingList.remove(i);
-            }
+    // Compra: setea los stocks de los item.
+
+    @RequestMapping("/buy")
+    public String buycart() {
+
+        if(shoppingList.size()<=0){
+            return "redirect: products";
         }
 
-        itemOut.setProductStock(itemOut.getProductStock()+1);
-        productsRepository.save(itemOut);
+        for (ProductOrder item : shoppingList
+        ) {
+            Optional<Products> pro = productsRepository.findById(item.getId());
+            if(pro==null) continue;
+
+            pro.get().setProductStock(item.getProductStock()- item.getQuantity());
+            productsRepository.save(pro.get());
+
+        }
+        shoppingList = new ArrayList<>();
+        return "redirect: products";
+    }
+    // Cancelar la compra.
+    @RequestMapping("/cancel")
+    public String cancel() {
+
+        shoppingList = new ArrayList<>();
+
         return "redirect: products";
     }
 
     @RequestMapping("products/shoppingcart/{id}")
-    public String deleteItem(@PathVariable Integer id, Model model) {
+    public String shoppingcart(@PathVariable Integer id, Model model) {
 
-        Products addToCartProduct = productsRepository.findById(id).orElse(null);
-        shoppingList.add(addToCartProduct);
-        if (addToCartProduct.getProductStock()!=0){
-            addToCartProduct.setProductStock(addToCartProduct.getProductStock()-1);
-            productsRepository.save(addToCartProduct);
-        } else {
-            Products itemOut = productsRepository.findById(id).orElse(null);
+        Boolean repeated = false;
+        Float total = 0f;
+        Optional<Products> addToCartProduct = productsRepository.findById(id);
 
-            itemOut.setProductStock(itemOut.getProductStock()+1);
-            productsRepository.save(itemOut);
-
+        if(addToCartProduct.get().getProductStock()==0){
+            shoppingList = new ArrayList<>();
             return "products/notStock";
         }
-        Double total = 0d;
-        for (Products item: shoppingList
-             ) {
-            total += item.getProductPrice();
+
+            for (ProductOrder item: shoppingList) {
+                if ((item.getId()).equals(addToCartProduct.get().getId())){
+                    item.addQuantity();
+                    repeated = true;
+                }
+            }
+
+        if(!repeated) {
+           ProductOrder addProduct = new ProductOrder();
+            addProduct.setId(addToCartProduct.get().getId());
+            addProduct.setProductName(addToCartProduct.get().getProductName());
+            addProduct.setProductPrice(addToCartProduct.get().getProductPrice());
+            addProduct.setProductPicture(addToCartProduct.get().getProductPicture());
+            addProduct.setProductStock(addToCartProduct.get().getProductStock());
+            addProduct.setQuantity(1);
+            shoppingList.add(addProduct);
+        }
+        // Cantidad de dinero total
+
+        for (ProductOrder item: shoppingList
+        ) {
+
+            total += item.getTotal();
+
+            if (total==null){
+                total = 0f;
+            }
         }
 
+        // No de error si la lista está vacia
 
-        model.addAttribute("total", total);
-        model.addAttribute("products", shoppingList);
+        if (shoppingList.size()>0){
+            model.addAttribute("products", shoppingList);
+        }
+        model.addAttribute("totalDe", total);
         return "products/shoppingcart";
     }
 
-    @GetMapping("/pdfFile")
-    public String getPdf(Model model){
-        model.addAttribute("products", shoppingList);
-        return "getPdfFile";
-    }
+//    @GetMapping("/pdfFile")
+//    public String getPdf(Model model){
+//        model.addAttribute("products", shoppingList);
+//        return "getPdfFile";
+//    }
 
 //    @GetMapping("/createPdf")
 //    public String pdfFile(Model model){

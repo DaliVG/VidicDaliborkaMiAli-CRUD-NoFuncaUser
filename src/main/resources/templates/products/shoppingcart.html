@@ -21,7 +21,7 @@
                     <h6 th:text="${products.size()}" class="mb-0 text-muted"></h6>
                   </div>
                   <hr class="my-4">
-                  <div th:each="product : ${products}" class="row mb-4 d-flex justify-content-between align-items-center">
+                  <div th:each="product: ${products}" class="row mb-4 d-flex justify-content-between align-items-center">
                     <div class="col-md-2 col-lg-2 col-xl-2">
                       <img
                               th:src="@{/images/}+${product.getProductPicture()}"
@@ -33,24 +33,29 @@
                     <div class="col-md-3 col-lg-3 col-xl-3">
                       <h6 th:text="${product.getProductPrice()}+' €'" class="text-muted"></h6>
                     </div>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <h6 th:text="${product.getQuantity()}+' items'" class="text-muted"></h6>
+                    </div>
                     <form th:action="@{/deleteItem}">
                       <input type="hidden" name="id" th:value="${product.getId()}" />
                       <input type="submit" class="btn btn-danger" value="Quitar del carrito" onclick="return confirm('Seguro que desea quitarlo del carrito?');" />
                     </form>
                   </div>
-
-                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                      <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
-                    </div>
                   </div>
                 </div>
               </div>
             </div>
           <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-            <h6 th:text="'El total es: '+${total}+'€'" class="mb-3"></h6>
+            <h6 th:text="'Total: '+${totalDe}+ '€'" class="mb-3"></h6>
           </div>
-          <form th:action="@{/createPdf}">
-            <button type="hidden" name="id" th:value="${products}" class="btn btn-warning m-3">Crear pdf?</button>
+<!--          <form th:action="@{/createPdf}">-->
+<!--            <button type="hidden" name="id" th:value="${products}" class="btn btn-warning m-3">Crear pdf?</button>-->
+<!--          </form>-->
+          <form th:action="@{/buy}">
+            <button type="hidden" name="id" class="btn btn-outline-info m-3" onclick="return alert('Muchas gracias por su compra!');">Realizar compra</button>
+          </form>
+          <form th:action="@{/cancel}">
+            <button type="hidden"  class="btn btn-outline-danger m-3">Cancelar</button>
           </form>
           </div>
         </div>

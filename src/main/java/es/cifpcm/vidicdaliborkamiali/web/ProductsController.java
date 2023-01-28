@@ -1,15 +1,12 @@
 package es.cifpcm.vidicdaliborkamiali.web;
-import es.cifpcm.vidicdaliborkamiali.web.CartController;
 import es.cifpcm.vidicdaliborkamiali.dao.MunicipioRepository;
 import es.cifpcm.vidicdaliborkamiali.dao.ProductsRepository;
 import es.cifpcm.vidicdaliborkamiali.dao.ProvinciaRepository;
-import es.cifpcm.vidicdaliborkamiali.model.Municipio;
 import es.cifpcm.vidicdaliborkamiali.model.Products;
-import es.cifpcm.vidicdaliborkamiali.model.Provincia;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -65,19 +62,24 @@ public class ProductsController {
     @RequestMapping("/saveProduct")
     public String save(@RequestParam String prodName, @RequestParam Float prodPrice, @RequestParam Integer prodStock, @RequestParam Integer prodMun, @RequestParam String prodImage) {
         Products product = new Products();
+
         product.setProductName(prodName);
 
-        if (prodImage==""){
+        if (prodImage.equals("")){
             prodImage="logo.png";
             product.setProductPicture(prodImage);
         } else {
             product.setProductPicture(prodImage);
         }
-        product.setProductPrice(prodPrice);
-        product.setProductStock(prodStock);
-        product.setIdMunicipio(prodMun);
-        productsRepository.save(product);
 
+        product.setProductPrice(prodPrice);
+
+        product.setProductStock(prodStock);
+
+        product.setIdMunicipio(prodMun);
+
+
+        productsRepository.save(product);
         return "redirect: products/showProduct/" + product.getId();
     }
 
@@ -88,6 +90,7 @@ public class ProductsController {
     }
     @RequestMapping("products/showProduct/editProduct/{id}")
     public String edit(@PathVariable Integer id, Model model) {
+        model.addAttribute("provincias", provinciaRepository.findAll());
         model.addAttribute("product", productsRepository.findById(id).orElse(null));
         return "products/editProduct";
     }
@@ -99,19 +102,27 @@ public class ProductsController {
         return "redirect:/products";
     }
 
-
-
     @RequestMapping("/updateProduct")
-    public String update(@RequestParam Integer id, @RequestParam String prodName, @RequestParam Float prodPrice, @RequestParam String prodImage) {
+    public String update(@RequestParam Integer id, @RequestParam @NotNull String prodName, @RequestParam Float prodPrice, @RequestParam Integer prodMun, @RequestParam String prodImage, @RequestParam Integer prodStock) {
+
         Products product = productsRepository.findById(id).orElse(null);
+
+
         product.setProductName(prodName);
-        if (prodImage==""){
+
+        if (prodImage.equals("")){
             prodImage="logo.png";
             product.setProductPicture(prodImage);
         } else {
-            product.setProductPicture(prodImage);
+            product.setProductPicture(product.getProductPicture());
         }
+
         product.setProductPrice(prodPrice);
+
+        product.setProductStock(prodStock);
+
+        product.setIdMunicipio(prodMun);
+
         productsRepository.save(product);
 
         return "redirect: products/showProduct/" + product.getId();
