@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="head">
     <meta charset="UTF-8"/>
     <title>Home</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -28,9 +27,9 @@
     </div>
 </nav>
 <div class="container mx-4">
-    <div class="starter-template" layout:fragment="content">
+    <div class="px-4 py-5 my-5 text-center">
         <h1 class="text-dark">Bienvenido a TuFurniture</h1>
-        <img src="images/logo.png" width="420" height="380">
+        <img class="d-block mx-auto mb-4" src="images/logo.png" width="200" height="200">
     </div>
 </div><!-- /.container -->
 <footer th:fragment="footer">

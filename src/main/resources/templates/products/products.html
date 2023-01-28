@@ -7,12 +7,22 @@
 </head>
 <body>
 <header th:replace="layouts/header::header"></header>
-
+<form class="form-inline px-4" name="filtro" >
+  <div class="form-group">
+    <select class="form-control pro m-2" id="provin" name="provinId">
+      <option th:each="provincia : ${provincias}" th:value="${provincia.getId()}" th:text="${provincia.getNombre()}"></option>
+    </select>
+    <select class="form-control m-2" id="munis" name="munis" >
+    </select>
+  </div>
+  <input type="hidden" th:value="${munis}" />
+  <button type="submit" class="btn btn-outline-dark">Filtrar por municipio</button>
+  <h3 class="m-2">
+    <a th:href="@{createProduct}" class="btn btn-outline-secondary"><span class="glyphicon glyphicon-plus-sign"></span>Crea un producto</a>
+  </h3>
+</form>
 <div class="row mx-4">
   <div class="col-xs-8 col-md-8">
-    <h3>
-      <a th:href="@{createProduct}" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span>Crea un producto</a>
-    </h3>
     <h2>Lista de productos</h2>
     <div class="table-responsive">
       <table class="table" id="product-table">
@@ -26,10 +36,13 @@
         </thead>
         <tbody>
         <tr th:each="product : ${products}">
-          <td><a th:text="${product.getProductName()}" th:href="@{'products/showProduct/' + ${product.getProductId()}}"></a></td>
+          <td><a th:text="${product.getProductName()}" th:href="@{'products/showProduct/' + ${product.getId()}}"></a></td>
           <td th:text="${product.getProductPrice()}"></td>
-          <td><img th:src="'images/'+${product.getProductPicture()}"/></td>
-          <td th:text="${product.getProductStock()}"></td>
+          <td><img th:src="'images/'+${product.getProductPicture()}" width="120" height="120"/></td>
+          <td th:text="${product.getProductStock()}" id="num"></td>
+          <td>
+              <a th:href="@{'products/shoppingcart/' + ${product.getId()}}" class="btn btn-warning" id="carro">Agregar al carrito</a>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -39,19 +52,39 @@
 </body>
 <script>
 
-const DOM = {
-    selecCateg: document.getElementsByClassName('munis'),
+  const DOM = {
+    selecCateg: document.getElementById('munis'),
+    prov: document.getElementById("provin"),
+    agregar: document.getElementById("carro"),
+    numero: document.getElementById("num"),
+    tedes: document.querySelectorAll("td"),
   }
 
-function changeMunicipio(){
-    var provincia;
-    provincia =
-    municipios.forEach(element => {
-        optionR = document.createElement("option");
-        optionR.setAttribute("th:each",`municipio :${municipios}`);
-        optionR.textContent=`${element.nombre}`;
-        DOM.selecCateg[0].appendChild(optionR);
-      })
-}
-  </script>
+  if (DOM.numero.textContent=="0"){
+    DOM.agregar.classList.add('d-none');
+  }
+
+    function CleanPage(){
+      let first = document.querySelectorAll('.muniDes');
+      first.forEach(element => element.remove());
+    }
+
+    async function changeMunicipio(){
+      let municipios = [];
+      let id = DOM.prov.value;
+      let url = "http://localhost:8080/VidicDaliborkaMiAli/products/municipiosFiltrados/"+id;
+          await fetch(url)
+          .then(response => response.json())
+          .then(json => municipios = json)
+          CleanPage()
+          municipios.forEach(element => {
+          optionR = document.createElement("option");
+          optionR.setAttribute("class", "muniDes");
+          optionR.value = element.id;
+          optionR.textContent= element.nombre;
+          DOM.selecCateg.appendChild(optionR);
+          });
+      }
+
+</script>
 </html>

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layouts/header::head">
+  <title>tu carrito bebé</title>
+</head>
+<body>
+<header th:replace="layouts/header::header"></header>
+<section class="h-100 h-custom" style="background-color: #d2c9ff;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12">
+        <div class="card card-registration card-registration-2" style="border-radius: 15px;">
+          <div class="card-body p-0">
+            <div class="row g-0">
+              <div class="col-lg-8">
+                <div class="p-5">
+                  <div class="d-flex justify-content-between align-items-center mb-5">
+                    <h1 class="fw-bold mb-0 text-black">Carrito de la compra</h1>
+                    <h6 th:text="${products.size()}" class="mb-0 text-muted"></h6>
+                  </div>
+                  <hr class="my-4">
+                  <div th:each="product : ${products}" class="row mb-4 d-flex justify-content-between align-items-center">
+                    <div class="col-md-2 col-lg-2 col-xl-2">
+                      <img
+                              th:src="@{/images/}+${product.getProductPicture()}"
+                              class="img-fluid rounded-3">
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <h6 th:text="${product.getProductName()}" class="text-muted"></h6>
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xl-3">
+                      <h6 th:text="${product.getProductPrice()}+' €'" class="text-muted"></h6>
+                    </div>
+                    <form th:action="@{/deleteItem}">
+                      <input type="hidden" name="id" th:value="${product.getId()}" />
+                      <input type="submit" class="btn btn-danger" value="Quitar del carrito" onclick="return confirm('Seguro que desea quitarlo del carrito?');" />
+                    </form>
+                  </div>
+
+                    <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                      <a href="#!" class="text-muted"><i class="fas fa-times"></i></a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+            <h6 th:text="'El total es: '+${total}+'€'" class="mb-3"></h6>
+          </div>
+          <form th:action="@{/createPdf}">
+            <button type="hidden" name="id" th:value="${products}" class="btn btn-warning m-3">Crear pdf?</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>

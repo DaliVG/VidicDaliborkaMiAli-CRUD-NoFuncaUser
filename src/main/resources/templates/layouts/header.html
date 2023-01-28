@@ -12,9 +12,9 @@
 </head>
 <body>
 <header th:fragment="header">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" th:href="@{/}">
-    <img th:src="@{/images/logo.png}" width="120" height="80"/>
+    <img th:src="@{/images/logo.png}" width="120" height="120"/>
   </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -32,6 +32,10 @@
       </li>
     </ul>
   </div>
+  <a class="navbar-brand" href="/VidicDaliborkaMiAli/products/shoppingcart">
+    <img th:src="@{/images/cart.png}" width="120" height="120"/>
+    <h6 th:text="${products.size()}" class="mb-0 text-muted"></h6>
+  </a>
 </nav>
 <div class="container">
   <div class="starter-template" layout:fragment="content"></div>

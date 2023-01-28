@@ -1,8 +1,11 @@
 package es.cifpcm.vidicdaliborkamiali.web;
-
+import es.cifpcm.vidicdaliborkamiali.web.CartController;
+import es.cifpcm.vidicdaliborkamiali.dao.MunicipioRepository;
 import es.cifpcm.vidicdaliborkamiali.dao.ProductsRepository;
 import es.cifpcm.vidicdaliborkamiali.dao.ProvinciaRepository;
+import es.cifpcm.vidicdaliborkamiali.model.Municipio;
 import es.cifpcm.vidicdaliborkamiali.model.Products;
+import es.cifpcm.vidicdaliborkamiali.model.Provincia;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,31 +20,39 @@ import java.util.List;
 
 @Controller
 public class ProductsController {
+
     @Autowired
     ProductsRepository productsRepository;
     @Autowired
     ProvinciaRepository provinciaRepository;
+    @Autowired
+    private MunicipioRepository municipioRepository;
 
     @RequestMapping("/products")
-    public String product(Model model) {
+    public String product(Model model, @RequestParam(name="munis", required = false, defaultValue="0")Integer munis) {
 
-        // Mostrar el filtrado de los muebles por municipio
+        if(munis==0){
+            model.addAttribute("products", productsRepository.findAll());
+        } else {
 
-//        List<Products> AllProducts = productsRepository.findAll();
-//        List<Products> FilteredProducts = new ArrayList<Products>();
-//
-//        for (Products munProduct: AllProducts) {
-//
-//            if (idMunicipio.equals(Products.getIdMunicipio())) {
-//
-//                FilteredProducts.add(munProduct);
-//            }
-//        }
+            List<Products> AllProducts = productsRepository.findAll();
+            List<Products> filteredProducts = new ArrayList<Products>();
 
+            for (Products munProduct: AllProducts) {
+
+                if (munis.equals(munProduct.getIdMunicipio())) {
+
+                    filteredProducts.add(munProduct);
+                }
+
+            }
+
+            model.addAttribute("products", filteredProducts);
+        }
         model.addAttribute("provincias", provinciaRepository.findAll());
-        model.addAttribute("products", productsRepository.findAll());
         return "products/products";
     }
+
 
     @RequestMapping("/createProduct")
     public String create(Model model) {
@@ -49,8 +60,10 @@ public class ProductsController {
         return "products/createProduct";
     }
 
+
+
     @RequestMapping("/saveProduct")
-    public String save(@RequestParam String prodName, @RequestParam Float prodPrice, @RequestParam Integer prodStock, @RequestParam String prodImage) {
+    public String save(@RequestParam String prodName, @RequestParam Float prodPrice, @RequestParam Integer prodStock, @RequestParam Integer prodMun, @RequestParam String prodImage) {
         Products product = new Products();
         product.setProductName(prodName);
 
@@ -61,11 +74,11 @@ public class ProductsController {
             product.setProductPicture(prodImage);
         }
         product.setProductPrice(prodPrice);
-
-        product.setIdMunicipio(35620);
+        product.setProductStock(prodStock);
+        product.setIdMunicipio(prodMun);
         productsRepository.save(product);
 
-        return "redirect: products/showProduct/" + product.getProductId();
+        return "redirect: products/showProduct/" + product.getId();
     }
 
     @RequestMapping("products/showProduct/{id}")
@@ -73,7 +86,11 @@ public class ProductsController {
         model.addAttribute("product", productsRepository.findById(id).orElse(null));
         return "products/showProduct";
     }
-
+    @RequestMapping("products/showProduct/editProduct/{id}")
+    public String edit(@PathVariable Integer id, Model model) {
+        model.addAttribute("product", productsRepository.findById(id).orElse(null));
+        return "products/editProduct";
+    }
     @RequestMapping("/deleteProduct")
     public String delete(@RequestParam Integer id) {
         Products product = productsRepository.findById(id).orElse(null);
@@ -82,11 +99,7 @@ public class ProductsController {
         return "redirect:/products";
     }
 
-    @RequestMapping("products/showProduct/editProduct/{id}")
-    public String edit(@PathVariable Integer id, Model model) {
-        model.addAttribute("product", productsRepository.findById(id).orElse(null));
-        return "products/editProduct";
-    }
+
 
     @RequestMapping("/updateProduct")
     public String update(@RequestParam Integer id, @RequestParam String prodName, @RequestParam Float prodPrice, @RequestParam String prodImage) {
@@ -101,6 +114,6 @@ public class ProductsController {
         product.setProductPrice(prodPrice);
         productsRepository.save(product);
 
-        return "redirect: products/showProduct/" + product.getProductId();
+        return "redirect: products/showProduct/" + product.getId();
     }
 }

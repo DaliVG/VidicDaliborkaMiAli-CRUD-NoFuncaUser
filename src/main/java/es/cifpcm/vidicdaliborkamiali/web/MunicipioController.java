@@ -27,13 +27,6 @@ public class MunicipioController {
     @Autowired
     private MunicipioRepository municipioRepository;
 
-
-//    @RequestMapping("products/showProduct/{id}")
-//    public String show(@PathVariable Integer id, Model model) {
-//        model.addAttribute("product", productsRepository.findById(id).orElse(null));
-//        return "products/showProduct";
-//    }
-
     @RequestMapping(value = "/products/municipiosFiltrados/{id}", produces = "application/json")
     @ResponseBody // para que me devuelva algo que NO es una vista
     public String municipio(@PathVariable  Integer id, Model model) throws JsonProcessingException {

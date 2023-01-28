@@ -6,26 +6,31 @@ import jakarta.persistence.*;
 @Table(name = "productoffer")
 public class Products {
     @Id
-    @Column(name = "product_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId;
-    @Column(name = "product_name", nullable = false)
+    @Column(name = "product_id", nullable = false)
+    private Integer id;
+
+    @Column(name = "product_name", nullable = false, length = 512)
     private String productName;
-    @Column(name = "product_price", nullable = true)
+
+    @Column(name = "product_price")
     private Float productPrice;
-    @Column(name = "product_picture", nullable = true)
+
+    @Column(name = "product_picture", length = 512)
     private String productPicture;
+
     @Column(name = "id_municipio", nullable = false)
-    private static Integer idMunicipio;
+    private Integer idMunicipio;
+
     @Column(name = "product_stock", nullable = false)
     private Integer productStock;
 
-    public Integer getProductId() {
-        return productId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getProductName() {
@@ -52,7 +57,7 @@ public class Products {
         this.productPicture = productPicture;
     }
 
-    public static Integer getIdMunicipio() {
+    public Integer getIdMunicipio() {
         return idMunicipio;
     }
 
@@ -68,6 +73,4 @@ public class Products {
         this.productStock = productStock;
     }
 
-    public Products() {
-    }
 }
