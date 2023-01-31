@@ -83,12 +83,12 @@ public class CartController {
             return "products/notStock";
         }
 
-            for (ProductOrder item: shoppingList) {
-                if ((item.getId()).equals(addToCartProduct.get().getId())){
-                    item.addQuantity();
-                    repeated = true;
-                }
+        for (ProductOrder item: shoppingList) {
+            if ((item.getId()).equals(addToCartProduct.get().getId())){
+                item.addQuantity();
+                repeated = true;
             }
+        }
 
         if(!repeated) {
            ProductOrder addProduct = new ProductOrder();
@@ -126,7 +126,7 @@ public class CartController {
 //        model.addAttribute("products", shoppingList);
 //        return "getPdfFile";
 //    }
-
+//
 //    @GetMapping("/createPdf")
 //    public String pdfFile(Model model){
 //        String filePdf = "C:\\Users\\Dali\\DocumentsSamplePdfFile.pdf";
