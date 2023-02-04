@@ -25,10 +25,12 @@ public class MunicipioController {
     @Autowired
     ProvinciaRepository provinciaRepository;
     @Autowired
-    private MunicipioRepository municipioRepository;
+    MunicipioRepository municipioRepository;
 
     @RequestMapping(value = "/products/municipiosFiltrados/{id}", produces = "application/json")
+
     @ResponseBody // para que me devuelva algo que NO es una vista
+
     public String municipio(@PathVariable  Integer id, Model model) throws JsonProcessingException {
 
         Provincia provChoose = provinciaRepository.findById(id).orElse(null);

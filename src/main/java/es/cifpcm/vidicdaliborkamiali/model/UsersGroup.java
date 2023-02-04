@@ -1,6 +1,12 @@
 package es.cifpcm.vidicdaliborkamiali.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Table(name = "users_groups")
@@ -41,4 +47,6 @@ public class UsersGroup {
     public void setGroupUserName(User userName) {
         this.userName = userName;
     }
+
+
 }

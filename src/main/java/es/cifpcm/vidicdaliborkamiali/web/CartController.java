@@ -1,24 +1,31 @@
 package es.cifpcm.vidicdaliborkamiali.web;
 
 import es.cifpcm.vidicdaliborkamiali.dao.ProductsRepository;
+import es.cifpcm.vidicdaliborkamiali.model.Order;
+import es.cifpcm.vidicdaliborkamiali.dao.OrderRepository;
 import es.cifpcm.vidicdaliborkamiali.model.ProductOrder;
 import es.cifpcm.vidicdaliborkamiali.model.Products;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 @Controller
 public class CartController {
     @Autowired
     ProductsRepository productsRepository;
+    @Autowired
+    OrderRepository orderRepository;
+    private static final AtomicInteger count = new AtomicInteger(610);
 
     List<ProductOrder> shoppingList = new ArrayList<>();
     @RequestMapping("/notStock")
@@ -28,10 +35,28 @@ public class CartController {
 
     @RequestMapping("/products/shoppingcart")
     public String shoppingcart(Model model) {
+
         model.addAttribute("products", shoppingList);
+
+        Float total = calculatingTotal(shoppingList);
+
+        // meter aqui funcion total
+        model.addAttribute("totalDe", total);
         return "products/shoppingcart";
     }
+    private Float calculatingTotal(List<ProductOrder>shoppingList){
+        Float total = 0f;
+        for (ProductOrder item: shoppingList
+        ) {
 
+            total += item.getTotal();
+
+            if (total==null){
+                total = 0f;
+            }
+        }
+        return total;
+    }
     @RequestMapping("/deleteItem")
     public String deleteitem(@RequestParam Integer id) {
 
@@ -59,6 +84,27 @@ public class CartController {
             productsRepository.save(pro.get());
 
         }
+
+        Float total = calculatingTotal(shoppingList);
+
+        String listaCompleta = "";
+
+        for (ProductOrder item : shoppingList
+        ) {
+            listaCompleta += item.toString();
+
+        }
+
+        Order customerNewOrder = new Order();
+        customerNewOrder.setOrderId(count.incrementAndGet());
+        customerNewOrder.setCustomerId(count.incrementAndGet());
+        customerNewOrder.setOrderDate(new Date());
+        customerNewOrder.setListProducts(listaCompleta);
+        customerNewOrder.setTotalPrice(total);
+        customerNewOrder.setCustomerAddress("A recoger en tienda");
+
+        orderRepository.save(customerNewOrder);
+
         shoppingList = new ArrayList<>();
         return "redirect: products";
     }
@@ -75,7 +121,7 @@ public class CartController {
     public String shoppingcart(@PathVariable Integer id, Model model) {
 
         Boolean repeated = false;
-        Float total = 0f;
+
         Optional<Products> addToCartProduct = productsRepository.findById(id);
 
         if(addToCartProduct.get().getProductStock()==0){
@@ -102,15 +148,7 @@ public class CartController {
         }
         // Cantidad de dinero total
 
-        for (ProductOrder item: shoppingList
-        ) {
-
-            total += item.getTotal();
-
-            if (total==null){
-                total = 0f;
-            }
-        }
+        Float total = calculatingTotal(shoppingList);
 
         // No de error si la lista está vacia
 

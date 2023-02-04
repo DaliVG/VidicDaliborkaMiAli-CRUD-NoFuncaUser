@@ -57,17 +57,18 @@
     prov: document.getElementById("provin"),
   }
 
-     DOM.prov.addEventListener("change", changeMunicipio);
+  DOM.prov.addEventListener("change", changeMunicipio);
 
-    function CleanPage(){
-      let first = document.querySelectorAll('.muniDes');
-      first.forEach(element => element.remove());
-    }
+  function CleanPage(){
+    let first = document.querySelectorAll('.muniDes');
+    first.forEach(element => element.remove());
+  }
 
     async function changeMunicipio(){
       let municipios = [];
       let id = DOM.prov.value;
       let url = "http://localhost:8080/VidicDaliborkaMiAli/products/municipiosFiltrados/"+id;
+
           await fetch(url)
           .then(response => response.json())
           .then(json => municipios = json)

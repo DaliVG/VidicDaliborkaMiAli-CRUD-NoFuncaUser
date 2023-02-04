@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 public class UsersController {
     @Autowired
     UsersRepository usersRepository;
-
     private static final AtomicInteger count = new AtomicInteger(600);
     @Autowired
     private UsersGroupRepository usersGroupRepository;
@@ -32,7 +31,16 @@ public class UsersController {
         model.addAttribute("user", usersRepository.findAll());
         return "users/users";
     }
-
+    @RequestMapping("/login")
+    public String login(Model model) {
+//        model.addAttribute("rol", usersGroupRepository.findAll());
+        return "login";
+    }
+    @RequestMapping("/login-error")
+    public String loginError(Model model) {
+        model.addAttribute("loginError", true);
+        return "login";
+    }
     @RequestMapping("/createUser")
     public String create(Model model) {
         return "users/createUser";
@@ -55,7 +63,9 @@ public class UsersController {
 
     @RequestMapping("/deleteUser")
     public String delete(@RequestParam Integer id) {
+
         User user = usersRepository.findById(id).orElse(null);
+
         var name = user.getUserName();
         UsersGroup usu = null;
 

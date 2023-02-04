@@ -2,9 +2,10 @@ package es.cifpcm.vidicdaliborkamiali.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
 @Table(name = "groups")
-public class Group {
+public class Group{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "group_id", nullable = false)
@@ -39,5 +40,6 @@ public class Group {
     public void setDescription(String description) {
         this.description = description;
     }
+
 
 }

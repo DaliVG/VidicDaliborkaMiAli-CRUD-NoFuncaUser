@@ -73,4 +73,12 @@ public class Products {
         this.productStock = productStock;
     }
 
+    @Override
+    public String toString() {
+        return "Su compra :" +
+                "id: " + id +
+                ", Nombre: '" + productName + '\'' +
+                ", Precio: " + productPrice +
+                '.';
+    }
 }
